@@ -3,6 +3,7 @@
 > ​llms are great at classification from 5, 10, maybe even 50 categories. but how do we deal with situations when we have over 1000? perhaps its an ever changing list of categories?
 
 [Video](https://youtu.be/6B7MzraQMZk)
+
 [![Large Scale Classification](https://img.youtube.com/vi/6B7MzraQMZk/0.jpg)](https://www.youtube.com/watch?v=6B7MzraQMZk)
 
 
