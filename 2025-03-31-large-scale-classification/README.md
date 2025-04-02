@@ -34,6 +34,8 @@ If you want to play with this code and try to extend it, you can try this exerci
 4. Update the code to embed and search a user query to select the topk most likely tools
 5. Explore some different use inputs for ambiguous tools, see how accurate you can get it
 
+If you want to add more MCP servers or other tools, the code to generate the json is at https://github.com/dexhorthy/thousands-of-tools-mcp
+
 ## Followup Exercise - Post-LLM probe
 
 1. Change the core LLM prompt to select out a `Category[]` instead of a single `Category`
