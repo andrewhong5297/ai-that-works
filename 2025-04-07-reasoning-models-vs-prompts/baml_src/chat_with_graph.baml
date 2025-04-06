@@ -18,7 +18,7 @@ class Response {
     "#) @stream.not_null
 }
 
-function ChatWithGraph(messages: Message[], schema: string?) -> Response | GraphQuery {
+function ChatWithGraph(messages: Message[], schema: string) -> Response | GraphQuery {
   client "openai/gpt-4o-mini"
   prompt #"
     Try and help the user out.
