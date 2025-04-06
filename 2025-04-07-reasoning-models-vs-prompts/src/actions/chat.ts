@@ -1,4 +1,6 @@
 'use server'
+import { b } from "@/baml_client"
+import type { Message } from "@/baml_client/types"
 
 export interface ChatMessage {
   id: string
@@ -12,66 +14,78 @@ interface ChatResponse {
   totalMessages: number
 }
 
-export async function getMockChatData(): Promise<ChatResponse> {
-  // Simulate a delay to mimic real API behavior
-  await new Promise(resolve => setTimeout(resolve, 1000))
 
-  const mockMessages: ChatMessage[] = [
-    {
-      id: '1',
-      role: 'user',
-      content: 'Hello! How can you help me today?',
-      timestamp: new Date().toISOString()
-    },
-    {
-      id: '2',
-      role: 'assistant',
-      content: 'I can help you with various tasks like coding, writing, analysis, and more. What would you like to work on?',
-      timestamp: new Date().toISOString()
-    },
-    {
-      id: '3',
-      role: 'user',
-      content: 'Can you help me with some coding?',
-      timestamp: new Date().toISOString()
-    },
-    {
-      id: '4',
-      role: 'assistant',
-      content: 'Of course! I can help you with coding in various languages and frameworks. What specific programming task would you like assistance with?',
-      timestamp: new Date().toISOString()
+const movies_schema = `
+
+`;
+
+const queryNeo4j = (query: string) => {
+    if (Math.random() > 0.5) {      
+        throw new Error("Not implemented")
     }
-  ]
-
-  return {
-    messages: mockMessages,
-    totalMessages: mockMessages.length
-  }
+    return "No movies fo"
 }
 
-export async function streamChatResponse(message: string): Promise<ReadableStream> {
+export async function streamChatResponse(messages: ChatMessage[]): Promise<ReadableStream> {
   const encoder = new TextEncoder();
+
   const stream = new ReadableStream({
     async start(controller) {
-      // Simulate typing effect
-      const response = "I'm processing your message: " + message;
-      for (let i = 0; i < response.length; i++) {
-        const chunk = response.slice(0, i + 1);
-        const data = JSON.stringify({
-          type: 'chunk',
-          content: chunk
-        });
-        controller.enqueue(encoder.encode(data + '\n'));
-        await new Promise(resolve => setTimeout(resolve, 50)); // Simulate typing speed
-      }
+        const workingContext: ChatMessage[] = []
+        while (true) {
+            const response = await b.ChatWithGraph([...messages, ...workingContext], movies_schema)
+            if (response.action === "reply") {
+            
+                const completion = JSON.stringify({
+                    type: 'complete',
+                    content: response
+                });
+                controller.enqueue(encoder.encode(completion + '\n'));
+                controller.close();
+                return ;
+            } else if (response.action === "graph_query") {
+                const completion = JSON.stringify({
+                    type: 'graph_query',
+                    content: response
+                });
+                controller.enqueue(encoder.encode(completion + '\n'));
 
-      // Send completion event
-      const completion = JSON.stringify({
-        type: 'complete',
-        content: response
-      });
-      controller.enqueue(encoder.encode(completion + '\n'));
-      controller.close();
+                // add the query to the working context
+                workingContext.push({
+                    id: `query-${workingContext.length}`,
+                    role: 'assistant',
+                    content: `cypher: ${response.query}`,
+                    timestamp: new Date().toISOString()
+                })
+
+
+                // go do the query
+                try {
+                    const result = queryNeo4j(response.query)   
+                    const resultMessage = JSON.stringify({
+                        type: 'graph_result',
+                        content: result
+                    })
+                    controller.enqueue(encoder.encode(resultMessage + '\n'));
+                    // back to top with result
+                    continue;
+                } catch (e) {
+                    const errorMessage = JSON.stringify({
+                        type: 'graph_error',
+                        content: `error: ${e}`
+                    })
+                    workingContext.push({
+                        id: `error-${workingContext.length}`,
+                        role: 'assistant',
+                        content: `error: ${e}`,
+                        timestamp: new Date().toISOString()
+                    })
+                    controller.enqueue(encoder.encode(errorMessage + '\n'));
+                    // back to top with error
+                    continue;
+                }
+            }
+        }
     }
   });
 

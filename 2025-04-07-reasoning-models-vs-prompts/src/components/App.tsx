@@ -1,29 +1,20 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { getMockChatData, streamChatResponse } from "@/actions/chat";
+import { streamChatResponse } from "@/actions/chat";
 import type { ChatMessage } from "@/actions/chat";
 
 export default function App() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 'welcome',
+      role: 'assistant',
+      content: 'Welcome to MovieBot! I can answer questions about movies.',
+      timestamp: new Date().toISOString()
+    }
+  ]);
   const [newMessage, setNewMessage] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const data = await getMockChatData();
-        setMessages(data.messages);
-      } catch (error) {
-        console.error('Failed to fetch messages:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMessages();
-  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -48,17 +39,9 @@ export default function App() {
     setNewMessage("");
     setIsStreaming(true);
 
-    let assistantMessage: ChatMessage = {
-      id: (Date.now() + 1).toString(),
-      role: 'assistant',
-      content: '',
-      timestamp: new Date().toISOString()
-    };
-
     try {
-      const stream = await streamChatResponse(newMessage);
+      const stream = await streamChatResponse([...messages, userMessage]);
       const reader = stream.getReader();
-      setMessages(prev => [...prev, assistantMessage]);
 
       while (true) {
         const { done, value } = await reader.read();
@@ -70,34 +53,60 @@ export default function App() {
         for (const event of events) {
           const data = JSON.parse(event);
           
-          if (data.type === 'chunk') {
-            assistantMessage.content = data.content;
-            setMessages(prev => [...prev.slice(0, -1), { ...assistantMessage }]);
+          if (data.type === 'complete') {
+            const assistantMessage: ChatMessage = {
+              id: Date.now().toString(),
+              role: 'assistant',
+              content: data.content.content,
+              timestamp: new Date().toISOString()
+            };
+            setMessages(prev => [...prev, assistantMessage]);
+          } else if (data.type === 'graph_query') {
+            const queryMessage: ChatMessage = {
+              id: `query-${Date.now()}`,
+              role: 'assistant',
+              content: `Querying the database: ${data.content.query}`,
+              timestamp: new Date().toISOString()
+            };
+            setMessages(prev => [...prev, queryMessage]);
+          } else if (data.type === 'graph_result') {
+            const resultMessage: ChatMessage = {
+              id: `result-${Date.now()}`,
+              role: 'assistant',
+              content: `Database result: ${data.content}`,
+              timestamp: new Date().toISOString()
+            };
+            setMessages(prev => [...prev, resultMessage]);
+          } else if (data.type === 'graph_error') {
+            const errorMessage: ChatMessage = {
+              id: `error-${Date.now()}`,
+              role: 'assistant',
+              content: `Error: ${data.content}`,
+              timestamp: new Date().toISOString()
+            };
+            setMessages(prev => [...prev, errorMessage]);
           }
         }
       }
     } catch (error) {
       console.error('Error streaming response:', error);
-      assistantMessage.content = 'Sorry, there was an error processing your message.';
-      setMessages(prev => [...prev.slice(0, -1), { ...assistantMessage }]);
+      const errorMessage: ChatMessage = {
+        id: `error-${Date.now()}`,
+        role: 'assistant',
+        content: 'Sorry, there was an error processing your message.',
+        timestamp: new Date().toISOString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsStreaming(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-pulse text-gray-500">Loading messages...</div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Chat History</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">MovieBot Chat</h1>
           <div className="space-y-6 mb-6 max-h-[60vh] overflow-y-auto">
             {messages.map((message) => (
               <div
@@ -133,7 +142,7 @@ export default function App() {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type your message..."
+              placeholder="Ask about movies..."
               className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={isStreaming}
             />
