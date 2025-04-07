@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { streamChatResponse } from "@/actions/chat";
 import type { ChatMessage } from "@/actions/chat";
 
@@ -14,15 +14,7 @@ export default function App() {
   ]);
   const [newMessage, setNewMessage] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const [showDebug, setShowDebug] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,16 +97,17 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full max-w-3xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col">
-          {/* Chat Box - Fixed Height */}
-          <div className="h-[60vh] bg-white rounded-lg shadow-sm flex flex-col mb-4">
+    <div className="w-full h-screen flex">
+      {/* Main content that will compress */}
+      <div className={`flex-1 transition-all duration-300 ${showDebug ? 'mr-[500px]' : 'mr-[40px]'}`}>
+        <div className="max-w-[1600px] mx-auto px-4 py-4 sm:px-6 lg:px-8">
+          {/* Chat Box */}
+          <div className="bg-white rounded-lg shadow-sm flex flex-col">
             <div className="p-4 border-b">
               <h1 className="text-2xl font-bold text-gray-900">MovieBot Chat</h1>
             </div>
             
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="h-[70vh] overflow-y-auto p-4">
               <div className="space-y-4">
                 {messages.map((message) => (
                   <div
@@ -142,7 +135,6 @@ export default function App() {
                     </div>
                   </div>
                 ))}
-                <div ref={messagesEndRef} />
               </div>
             </div>
             
@@ -166,11 +158,25 @@ export default function App() {
               </form>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Debug Section - Scrollable */}
-          <div className="flex-1 overflow-y-auto bg-gray-800 rounded-lg p-4">
-            <h2 className="text-sm font-mono text-gray-400 mb-2">Debug Messages:</h2>
-            <pre className="text-xs font-mono text-gray-300 overflow-x-auto">
+      {/* Debug Section */}
+      <div className={`fixed right-0 top-0 h-full transition-transform duration-300 ease-in-out ${showDebug ? 'translate-x-0' : 'translate-x-[460px]'}`}>
+        <button
+          onClick={() => setShowDebug(!showDebug)}
+          className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full bg-gray-800 text-white px-2 py-4 rounded-l-lg hover:bg-gray-700 shadow-lg"
+          aria-label={showDebug ? 'Hide Debug Panel' : 'Show Debug Panel'}
+        >
+          {showDebug ? '→' : '←'}
+        </button>
+        <div className="w-[500px] h-full bg-gray-800 shadow-2xl">
+          <div className="p-4 h-full flex flex-col">
+            <h2 className="text-sm font-mono text-gray-400 mb-2 flex items-center justify-between">
+              Debug Messages
+              <span className="text-xs text-gray-500">{messages.length} messages</span>
+            </h2>
+            <pre className="text-xs font-mono text-gray-300 overflow-auto flex-1 bg-gray-900 rounded p-4">
               {JSON.stringify(messages, null, 2)}
             </pre>
           </div>
