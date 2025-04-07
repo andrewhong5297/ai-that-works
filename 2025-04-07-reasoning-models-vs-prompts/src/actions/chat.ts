@@ -30,12 +30,12 @@ const fakeResponse = (messages: ChatMessage[]): ReplyResponse | QueryGraphRespon
     if (isUserMessage && messages.slice(-1)[0].content.includes("matrix")) {
         return {
             action: "graph_query",
-            query: "MATCH (m:Movie {title: 'The Matrix'})-[r:ACTED_IN|DIRECTED]-(p:Person) RETURN m, r, p"
+            query: "MATCH (m:Movie)<-[:RATED]-(u:User) WHERE m.title CONTAINS 'Matrix' WITH m, count(*) AS reviews RETURN m.title AS movie, reviews ORDER BY reviews DESC LIMIT 5"
         }
     } else if (isUserMessage && messages.slice(-1)[0].content.includes("keanu")) {
         return {
             action: "graph_query",
-            query: "MATCH (p:Person {name: 'Keanu Reeves'})-[r:ACTED_IN]-(m:Movie) RETURN p, r, m"
+            query: "MATCH (p:Person {name: 'Keanu Reeves'})-[r:ACTED_IN]->(m:Movie) RETURN p.name as actor, m.title as movie, m.year as year ORDER BY m.year DESC"
         }
     } else if (messages.slice(-1)[0].isError) {
         return {
