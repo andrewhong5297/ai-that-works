@@ -1,6 +1,5 @@
 'use server'
-import { b } from "@/baml_client"
-import type { Message } from "@/baml_client/types"
+// import { b } from "@/baml_client"
 
 export interface ChatMessage {
   id: string
@@ -15,17 +14,42 @@ interface ChatResponse {
 }
 
 
-const movies_schema = `
-
-`;
-
 const queryNeo4j = (query: string) => {
     if (Math.random() > 0.5) {      
         throw new Error("Not implemented")
     }
-    return "No movies fo"
+    return `results: [{
+        type: "movie",
+        title: "The Matrix",
+        year: 1999,
+        rating: 8.7,
+        description: "A computer hacker learns about the true nature of his reality and his role in the war against its controllers.",
+        edges: [
+            {
+                type: "starred_by",
+                nodes: [
+                    {
+                        type: "actor",
+                        name: "Keanu Reeves",
+                        description: "The actor who played Neo"
+                    },
+                    {
+                        type: "actor",
+                        name: "Carrie-Anne Moss",
+                        description: "The actress who played Trinity"
+                    }
+                ]
+            }
+        ]
+    }]`
 }
 
+const fakeResponse = () => {
+    return {
+        action: "reply",
+        content: "Hello, how are you?"
+    }
+}
 export async function streamChatResponse(messages: ChatMessage[]): Promise<ReadableStream> {
   const encoder = new TextEncoder();
 
@@ -33,7 +57,8 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
     async start(controller) {
         const workingContext: ChatMessage[] = []
         while (true) {
-            const response = await b.ChatWithGraph([...messages, ...workingContext], movies_schema)
+            // const response = await b.ChatWithGraph([...messages, ...workingContext], movies_schema)
+            const response = fakeResponse()
             if (response.action === "reply") {
             
                 const completion = JSON.stringify({

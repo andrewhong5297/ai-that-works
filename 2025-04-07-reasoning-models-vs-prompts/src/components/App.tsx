@@ -9,7 +9,7 @@ export default function App() {
       id: 'welcome',
       role: 'assistant',
       content: 'Welcome to MovieBot! I can answer questions about movies.',
-      timestamp: new Date().toISOString()
+      timestamp: '2024-04-07T00:00:00.000Z'
     }
   ]);
   const [newMessage, setNewMessage] = useState("");
@@ -35,12 +35,14 @@ export default function App() {
       timestamp: new Date().toISOString()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    // Update messages with user message first
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setNewMessage("");
     setIsStreaming(true);
 
     try {
-      const stream = await streamChatResponse([...messages, userMessage]);
+      const stream = await streamChatResponse(updatedMessages);
       const reader = stream.getReader();
 
       while (true) {
@@ -103,57 +105,75 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">MovieBot Chat</h1>
-          <div className="space-y-6 mb-6 max-h-[60vh] overflow-y-auto">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
-              >
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                    message.role === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-900'
-                  }`}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-medium">
-                      {message.role === 'user' ? 'You' : 'Assistant'}
-                    </span>
-                    <span className="text-xs opacity-70">
-                      {new Date(message.timestamp).toLocaleString()}
-                    </span>
+    <div className="h-screen flex flex-col bg-gray-50">
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full max-w-3xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col">
+          {/* Chat Box - Fixed Height */}
+          <div className="h-[60vh] bg-white rounded-lg shadow-sm flex flex-col mb-4">
+            <div className="p-4 border-b">
+              <h1 className="text-2xl font-bold text-gray-900">MovieBot Chat</h1>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="space-y-4">
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex ${
+                      message.role === 'user' ? 'justify-end' : 'justify-start'
+                    }`}
+                  >
+                    <div
+                      className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                        message.role === 'user'
+                          ? 'bg-blue-500 text-white'
+                          : 'bg-gray-100 text-gray-900'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-medium">
+                          {message.role === 'user' ? 'You' : 'Assistant'}
+                        </span>
+                        <span className="text-xs opacity-70">
+                          {new Date(message.timestamp).toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-sm leading-relaxed">{message.content}</p>
+                    </div>
                   </div>
-                  <p className="text-sm leading-relaxed">{message.content}</p>
-                </div>
+                ))}
+                <div ref={messagesEndRef} />
               </div>
-            ))}
-            <div ref={messagesEndRef} />
+            </div>
+            
+            <div className="p-4 border-t">
+              <form onSubmit={handleSubmit} className="flex gap-2">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Ask about movies..."
+                  className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  disabled={isStreaming}
+                />
+                <button
+                  type="submit"
+                  disabled={!newMessage.trim() || isStreaming}
+                  className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isStreaming ? 'Sending...' : 'Send'}
+                </button>
+              </form>
+            </div>
           </div>
-          
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Ask about movies..."
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              disabled={isStreaming}
-            />
-            <button
-              type="submit"
-              disabled={!newMessage.trim() || isStreaming}
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isStreaming ? 'Sending...' : 'Send'}
-            </button>
-          </form>
+
+          {/* Debug Section - Scrollable */}
+          <div className="flex-1 overflow-y-auto bg-gray-800 rounded-lg p-4">
+            <h2 className="text-sm font-mono text-gray-400 mb-2">Debug Messages:</h2>
+            <pre className="text-xs font-mono text-gray-300 overflow-x-auto">
+              {JSON.stringify(messages, null, 2)}
+            </pre>
+          </div>
         </div>
       </div>
     </div>
