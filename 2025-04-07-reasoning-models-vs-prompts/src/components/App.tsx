@@ -63,22 +63,21 @@ export default function App() {
               timestamp: new Date().toISOString()
             };
             setMessages(prev => [...prev, queryMessage]);
-          } else if (data.type === 'graph_result') {
-            const resultMessage: ChatMessage = {
-              id: `result-${Date.now()}`,
-              role: 'assistant',
-              content: `Database result: ${data.content}`,
-              timestamp: new Date().toISOString()
-            };
-            setMessages(prev => [...prev, resultMessage]);
           } else if (data.type === 'graph_error') {
             const errorMessage: ChatMessage = {
               id: `error-${Date.now()}`,
-              role: 'assistant',
-              content: `Error: ${data.content}`,
+              role: 'tool',
+              content: data.content,
+              isError: true,
               timestamp: new Date().toISOString()
             };
             setMessages(prev => [...prev, errorMessage]);
+          } else {
+            // Handle raw tool messages (e.g. from chat.ts)
+            const message = data as ChatMessage;
+            if (message.role === 'tool') {
+              setMessages(prev => [...prev, message]);
+            }
           }
         }
       }
@@ -120,12 +119,16 @@ export default function App() {
                       className={`max-w-[80%] rounded-2xl px-4 py-3 ${
                         message.role === 'user'
                           ? 'bg-blue-500 text-white'
+                          : message.role === 'tool'
+                          ? message.isError
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-green-100 text-green-700'
                           : 'bg-gray-100 text-gray-900'
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs font-medium">
-                          {message.role === 'user' ? 'You' : 'Assistant'}
+                          {message.role === 'user' ? 'You' : message.role === 'tool' ? 'Tool' : 'Assistant'}
                         </span>
                         <span className="text-xs opacity-70">
                           {new Date(message.timestamp).toLocaleString()}
