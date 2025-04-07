@@ -1,5 +1,5 @@
 class Message {
-    role "user" | "assistant"
+    role "user" | "assistant" | "tool"
     content string
 }
 
@@ -26,12 +26,14 @@ function ChatWithGraph(messages: Message[], schema: string) -> Response | GraphQ
     I have access to a neo4j graph database of movies and their relationships.
     {{ schema }}
 
-    {{ ctx.output_format }}
-
     {% for m in messages %}
     {{ _.role(m.role) }}
     {{ m.content }}
     {% endfor %}
+
+
+    {{ _.role('system') }}
+    {{ ctx.output_format }}
   "#
 }
 

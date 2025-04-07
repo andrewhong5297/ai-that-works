@@ -1,8 +1,8 @@
-import neo4j, { Driver } from 'neo4j-driver';
+import neo4j, { type Driver, type Session } from 'neo4j-driver';
 
 let driver: Driver | null = null;
 
-export function getNeo4jDriver() {
+function getNeo4jDriver() {
     if (!driver) {
         driver = neo4j.driver(
             'neo4j+s://demo.neo4jlabs.com:7687',
@@ -12,12 +12,23 @@ export function getNeo4jDriver() {
     return driver;
 }
 
-export async function queryNeo4j(query: string) {
-    const session = getNeo4jDriver().session({ database: 'recommendations' });
-    try {
-        const result = await session.run(query);
+export class Neo4jSession {
+    private session: Session;
+
+    constructor() {
+        this.session = getNeo4jDriver().session({ database: 'recommendations' });
+    }
+
+    async run(query: string) {
+        const result = await this.session.run(query);
         return result.records;
-    } finally {
-        await session.close();
+    }
+
+    async close() {
+        await this.session.close();
+    }
+
+    finalize() {
+        this.close().catch(err => console.error('Error closing session:', err));
     }
 }
