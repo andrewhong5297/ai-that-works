@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { streamChatResponse } from "@/actions/chat";
 import type { ChatMessage } from "@/actions/chat";
 
@@ -12,9 +12,40 @@ export default function App() {
       timestamp: '2024-04-07T00:00:00.000Z'
     }
   ]);
+  const [expandedMessages, setExpandedMessages] = useState<Set<string>>(new Set());
   const [newMessage, setNewMessage] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [showDebug, setShowDebug] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const toggleMessageExpansion = (id: string) => {
+    setExpandedMessages(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const formatMessageContent = (content: string, messageId: string) => {
+    const lines = content.split('\n');
+    if (lines.length <= 10) return content;
+
+    return expandedMessages.has(messageId) 
+      ? content 
+      : lines.slice(0, 10).join('\n') + '\n...';
+  };
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,7 +90,7 @@ export default function App() {
             const queryMessage: ChatMessage = {
               id: `query-${Date.now()}`,
               role: 'assistant',
-              content: `Querying the database: ${data.content.query}`,
+              content: data.content.query,
               timestamp: new Date().toISOString()
             };
             setMessages(prev => [...prev, queryMessage]);
@@ -123,21 +154,51 @@ export default function App() {
                           ? message.isError
                             ? 'bg-red-100 text-red-700'
                             : 'bg-green-100 text-green-700'
+                          : message.role === 'assistant' && message.content.startsWith('MATCH')
+                          ? 'bg-purple-100 text-purple-700'
                           : 'bg-gray-100 text-gray-900'
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs font-medium">
-                          {message.role === 'user' ? 'You' : message.role === 'tool' ? 'Tool' : 'Assistant'}
+                          {message.role === 'user' 
+                            ? 'You' 
+                            : message.role === 'tool' 
+                            ? 'Tool' 
+                            : 'Assistant'}
                         </span>
+                        {message.role === 'assistant' && message.content.startsWith('MATCH') && (
+                          <span className="text-xs font-medium bg-purple-200 px-1.5 py-0.5 rounded">
+                            Query
+                          </span>
+                        )}
                         <span className="text-xs opacity-70">
                           {new Date(message.timestamp).toLocaleString()}
                         </span>
                       </div>
-                      <p className="text-sm leading-relaxed">{message.content}</p>
+                      <div className={`text-sm leading-relaxed ${
+                        message.role === 'tool' || message.isError || message.role === 'assistant' && message.content.startsWith('MATCH')
+                          ? 'font-mono' 
+                          : ''
+                      }`}>
+                        <pre className="whitespace-pre-wrap break-words overflow-x-auto max-w-full">
+                          {message.role === 'tool' 
+                            ? formatMessageContent(message.content, message.id)
+                            : message.content}
+                        </pre>
+                        {message.role === 'tool' && message.content.split('\n').length > 10 && (
+                          <button
+                            onClick={() => toggleMessageExpansion(message.id)}
+                            className="mt-2 text-xs font-sans bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors"
+                          >
+                            {expandedMessages.has(message.id) ? '▼ Show less' : '▶ Show more'}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
             </div>
             

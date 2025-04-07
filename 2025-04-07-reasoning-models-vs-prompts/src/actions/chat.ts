@@ -7,7 +7,9 @@ export interface ChatMessage {
   role: 'user' | 'assistant' | 'tool'
   content: string
   timestamp: string
+  // for the UI
   isError?: boolean
+  isToolCall?: boolean
 }
 
 interface ChatResponse {
@@ -22,7 +24,7 @@ const queryNeo4j = (query: string) => {
     if (queryCount % 2 === 0) {
         throw new Error("Error connecting to database")
     }
-    return `results: [{
+    return JSON.stringify([{
         type: "movie",
         title: "The Matrix",
         year: 1999,
@@ -45,7 +47,7 @@ const queryNeo4j = (query: string) => {
                 ]
             }
         ]
-    }]`
+    }]);
 }
 
 type ReplyResponse = {
@@ -72,7 +74,7 @@ const fakeResponse = (messages: ChatMessage[]): ReplyResponse | QueryGraphRespon
     } else if (messages.slice(-1)[0].isError) {
         return {
             action: "graph_query",
-            query: messages.slice(-1)[0].content
+            query: messages.slice(-2)[0].content
         }
     } else if (messages.slice(-1)[0].role === "tool") {
         return {
@@ -93,7 +95,7 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
     async start(controller) {
         const workingContext: ChatMessage[] = []
         while (true) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 250));
             const response = fakeResponse([...messages, ...workingContext])
             console.log("=======INPUT========")
             console.log(`... ${workingContext.length - 1} other messages...`)
@@ -108,10 +110,11 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
             // }))
             // const response = await b.ChatWithGraph(messagesForBaml, moviesSchema)
             if (response.action === "reply") {
-            
                 const completion = JSON.stringify({
                     type: 'complete',
-                    content: response
+                    content: {
+                        content: response.content
+                    }
                 });
                 controller.enqueue(encoder.encode(completion + '\n'));
                 controller.close();
@@ -119,7 +122,9 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
             } else if (response.action === "graph_query") {
                 const completion = JSON.stringify({
                     type: 'graph_query',
-                    content: response
+                    content: {
+                        query: response.query
+                    }
                 });
                 controller.enqueue(encoder.encode(completion + '\n'));
 
@@ -127,37 +132,35 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
                 workingContext.push({
                     id: `query-${workingContext.length}`,
                     role: 'assistant',
-                    content: `cypher: ${response.query}`,
+                    content: response.query,
                     timestamp: new Date().toISOString()
                 })
-
 
                 // go do the query
                 try {
                     const result = queryNeo4j(response.query)   
+                    // fake a delay
+                    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 250));
                     const resultMessage: ChatMessage = {
                         id: `result-${workingContext.length}`,
                         role: 'tool',
-                        content: result,
+                        content: JSON.stringify(JSON.parse(result), null, 2),
                         timestamp: new Date().toISOString()
                     }
                     workingContext.push(resultMessage)
                     controller.enqueue(encoder.encode(JSON.stringify(resultMessage) + '\n'));
                     // back to top with result
                     continue;
-                } catch (e) {
-                    const errorMessage = JSON.stringify({
-                        type: 'graph_error',
-                        content: `error: ${e}`
-                    })
-                    workingContext.push({
+                } catch (e: any) {
+                    const errorMessage: ChatMessage = {
                         id: `error-${workingContext.length}`,
                         role: 'tool',
-                        content: `error: ${e}`,
+                        content: e.message,
                         isError: true,
                         timestamp: new Date().toISOString()
-                    })
-                    controller.enqueue(encoder.encode(errorMessage + '\n'));
+                    }
+                    workingContext.push(errorMessage)
+                    controller.enqueue(encoder.encode(JSON.stringify(errorMessage) + '\n'));
                     // back to top with error
                     continue;
                 }
