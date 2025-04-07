@@ -177,16 +177,21 @@ export default function App() {
                         </span>
                       </div>
                       <div className={`text-sm leading-relaxed ${
-                        message.role === 'tool' || message.isError || message.role === 'assistant' && message.content.startsWith('MATCH')
+                        message.role === 'tool' || message.content.startsWith('MATCH')
                           ? 'font-mono' 
                           : ''
                       }`}>
-                        <pre className="whitespace-pre-wrap break-words overflow-x-auto max-w-full">
-                          {message.role === 'tool' 
+                        <pre className={`whitespace-pre-wrap break-words overflow-x-auto max-w-full ${
+                          message.role === 'tool' || message.content.startsWith('MATCH')
+                            ? ''
+                            : 'font-sans'
+                        }`}>
+                          {(message.role === 'tool' || message.role === 'assistant') 
                             ? formatMessageContent(message.content, message.id)
                             : message.content}
                         </pre>
-                        {message.role === 'tool' && message.content.split('\n').length > 10 && (
+                        {(message.role === 'tool' || message.role === 'assistant') && 
+                         message.content.split('\n').length > 10 && (
                           <button
                             onClick={() => toggleMessageExpansion(message.id)}
                             className="mt-2 text-xs font-sans bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors"
