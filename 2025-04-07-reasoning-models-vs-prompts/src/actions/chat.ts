@@ -1,13 +1,12 @@
 'use server'
-// import { b, Message } from "@/baml_client"
 import { moviesSchema } from "@/lib/graphSchema"
+import { queryNeo4j } from "@/lib/neo4j"
 
 export interface ChatMessage {
   id: string
   role: 'user' | 'assistant' | 'tool'
   content: string
   timestamp: string
-  // for the UI
   isError?: boolean
   isToolCall?: boolean
 }
@@ -15,39 +14,6 @@ export interface ChatMessage {
 interface ChatResponse {
   messages: ChatMessage[]
   totalMessages: number
-}
-
-let queryCount = 0;
-
-const queryNeo4j = (query: string) => {
-    queryCount++;
-    if (queryCount % 2 === 0) {
-        throw new Error("Error connecting to database")
-    }
-    return JSON.stringify([{
-        type: "movie",
-        title: "The Matrix",
-        year: 1999,
-        rating: 8.7,
-        description: "A computer hacker learns about the true nature of his reality and his role in the war against its controllers.",
-        edges: [
-            {
-                type: "starred_by",
-                nodes: [
-                    {
-                        type: "actor",
-                        name: "Keanu Reeves",
-                        description: "The actor who played Neo"
-                    },
-                    {
-                        type: "actor",
-                        name: "Carrie-Anne Moss",
-                        description: "The actress who played Trinity"
-                    }
-                ]
-            }
-        ]
-    }]);
 }
 
 type ReplyResponse = {
@@ -64,12 +30,12 @@ const fakeResponse = (messages: ChatMessage[]): ReplyResponse | QueryGraphRespon
     if (isUserMessage && messages.slice(-1)[0].content.includes("matrix")) {
         return {
             action: "graph_query",
-            query: "MATCH (m:Movie {title: 'The Matrix'}) RETURN m"
+            query: "MATCH (m:Movie {title: 'The Matrix'})-[r:ACTED_IN|DIRECTED]-(p:Person) RETURN m, r, p"
         }
     } else if (isUserMessage && messages.slice(-1)[0].content.includes("keanu")) {
         return {
             action: "graph_query",
-            query: "MATCH (a:Actor {name: 'Keanu Reeves'}) RETURN a"
+            query: "MATCH (p:Person {name: 'Keanu Reeves'})-[r:ACTED_IN]-(m:Movie) RETURN p, r, m"
         }
     } else if (messages.slice(-1)[0].isError) {
         return {
@@ -79,15 +45,16 @@ const fakeResponse = (messages: ChatMessage[]): ReplyResponse | QueryGraphRespon
     } else if (messages.slice(-1)[0].role === "tool") {
         return {
             action: "reply",
-            content: `heres what I got: ${messages.slice(-1)[0].content}`
+            content: `Here's what I found: ${messages.slice(-1)[0].content}`
         }
     }
 
     return {
         action: "reply",
-        content: "Sorry I can only help with questions about the matrix"
+        content: "I can help you find information about movies, actors and their relationships. Try asking about specific movies or actors!"
     }
 }
+
 export async function streamChatResponse(messages: ChatMessage[]): Promise<ReadableStream> {
   const encoder = new TextEncoder();
 
@@ -96,6 +63,17 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
         const workingContext: ChatMessage[] = []
         while (true) {
             await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 250));
+            if (workingContext.length > 10) {
+                const completion: ChatMessage = {
+                    id: `error-${workingContext.length}`,
+                    role: 'assistant',
+                    content: "I encountered too many errors, please try again",
+                    timestamp: new Date().toISOString(),
+                };
+                controller.enqueue(encoder.encode(JSON.stringify(completion) + '\n'));
+                controller.close();
+                return;
+            }
             const response = fakeResponse([...messages, ...workingContext])
             console.log("=======INPUT========")
             console.log(`... ${workingContext.length - 1} other messages...`)
@@ -103,12 +81,6 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
             console.log("=======OUTPUT========")
             console.log(JSON.stringify(response, null, 2))
 
-            // const messagesForBaml: Message[] = [...messages, ...workingContext].map(m => ({
-            //     // tool messages are basically user messages - we track "tool" differently so we can show them in the UI
-            //     role: m.role === "assistant" ? "assistant" : "user",
-            //     content: m.content
-            // }))
-            // const response = await b.ChatWithGraph(messagesForBaml, moviesSchema)
             if (response.action === "reply") {
                 const completion = JSON.stringify({
                     type: 'complete',
@@ -138,13 +110,11 @@ export async function streamChatResponse(messages: ChatMessage[]): Promise<Reada
 
                 // go do the query
                 try {
-                    const result = queryNeo4j(response.query)   
-                    // fake a delay
-                    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 250));
+                    const result = await queryNeo4j(response.query)   
                     const resultMessage: ChatMessage = {
                         id: `result-${workingContext.length}`,
                         role: 'tool',
-                        content: JSON.stringify(JSON.parse(result), null, 2),
+                        content: JSON.stringify(result, null, 2),
                         timestamp: new Date().toISOString()
                     }
                     workingContext.push(resultMessage)

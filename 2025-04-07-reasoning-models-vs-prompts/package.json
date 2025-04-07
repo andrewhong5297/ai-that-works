@@ -12,6 +12,7 @@
   "dependencies": {
     "@boundaryml/baml": "^0.80.2",
     "dotenv": "^16.4.7",
+    "neo4j-driver": "^5.28.1",
     "next": "15.2.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
