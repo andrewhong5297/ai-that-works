@@ -27,14 +27,19 @@ export async function streamChatResponse(
 
         const workingContext: ChatMessage[] = [];
         while (true) {
-          if (workingContext.length > 10) {
+          if (workingContext.length > 40) {
             const completion: ChatMessage = {
               id: `error-${workingContext.length}`,
               role: "assistant",
               content: "I encountered too many errors, please try again",
               timestamp: new Date().toISOString(),
             };
-            sendEvent(JSON.stringify(completion));
+            sendEvent(JSON.stringify({
+              type: "complete",
+              content: {
+                content: completion.content,
+              },
+            }));
             controller.close();
             return;
           }
@@ -61,6 +66,16 @@ export async function streamChatResponse(
             return;
           }
           response.action satisfies "graph_query";
+          const reasoningEvent = JSON.stringify({
+            type: "reasoning",
+            content: {
+              initial_reasoning: response.initial_reasoning,
+              problems_with_initial_reasoning: response.problems_with_initial_reasoning,
+              improved_reasoning: response.improved_reasoning,
+            },
+          });
+          sendEvent(reasoningEvent);
+
           const completion = JSON.stringify({
             type: "graph_query",
             content: {
@@ -87,6 +102,16 @@ export async function streamChatResponse(
               timestamp: new Date().toISOString(),
             };
             workingContext.push(resultMessage);
+            if (result.length === 0) {
+              const errorMessage: ChatMessage = {
+                id: `error-${workingContext.length}`,
+                role: "tool",
+                content: "Hmm, seems like the query didn't return any results perhaps its wrong? or misspelled, should we ask the user for more information?",
+                timestamp: new Date().toISOString(),
+              };
+              workingContext.push(errorMessage);
+              sendEvent(JSON.stringify(errorMessage));
+            }
             sendEvent(JSON.stringify(resultMessage));
             // back to top with result
           } catch (e: unknown) {
