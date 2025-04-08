@@ -65,6 +65,5 @@ What reasoning workflows can you replace with smaller cheaper models?
 ![image](https://github.com/user-attachments/assets/201380ad-837b-4dc7-8b49-9f7ba350ebbf)
 
 
-
-![image](https://github.com/user-attachments/assets/d253a2d9-b4e4-43f2-9a7d-bfb549bf2571)
+![image](https://github.com/user-attachments/assets/365a92ae-a6e5-41b5-ad00-720b9abf4697)
 
