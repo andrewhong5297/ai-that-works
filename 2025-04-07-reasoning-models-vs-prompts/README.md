@@ -1,21 +1,57 @@
-# MovieBot
+# 🦄 reasoning models vs reasoning prompts
 
-An AI-powered chat interface for answering questions about movies.
+> models can reason but you can also reason within a prompt. which technique wins out when and why? we'll find out by adding reasoning to an existing movie chat agent.
 
-## Getting Started
+[Video](https://youtu.be/D-pcKduKdYM)
 
-First, run the development server:
+[![image](https://img.youtube.com/vi/D-pcKduKdYM/0.jpg)](https://youtu.be/D-pcKduKdYM)
+
+## Running this code
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Install dependencies
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+# Convert BAML files -> TypeScript
+pnpm run generate
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a custom font family.
+```bash
+# Run the code
+pnpm run dev
+```
+
+## Followup Exercises
+
+What workflows do you have that you can add reasoning to?
+
+What reasoning workflows can you replace with smaller cheaper models?
+
+## Session Notes
+
+### Key Takeaways
+
+- You can make a cheap model do reasoning just by prompting it well
+- Time management of your Engineering Team
+     - o3 / reasoning model if you just wanna move fast
+- Cost management / speed corollary
+     - if you need performance / speed / choice 
+     - if you can only run small models e.g. OSS or at the edge
+- better prompts / guided reasoning, better than generic <THINK> 
+  tokens in general-purpose models
+     - you can make a good reasoning model even better with guided reasoning
+- actor / checker / llm-as-judge workflows may work but are exponential in cost / latency
+
+### Chat App Architecture
+
+### Reasoning Model Architecture
+
+### Different Reasoning Techniques
+
+### Prompting a Model to Reason
+
+### Displaying Reasoning to the user with structured outputs
+
+### Multi-Actor and LLM-as-a-Judge 

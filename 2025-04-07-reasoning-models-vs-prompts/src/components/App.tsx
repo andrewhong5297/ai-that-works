@@ -77,6 +77,7 @@ export default function App() {
 
         for (const event of events) {
           const data = JSON.parse(event);
+          console.log("EVENT", data.type)
           
           if (data.type === 'complete') {
             const assistantMessage: ChatMessage = {
@@ -86,6 +87,18 @@ export default function App() {
               timestamp: new Date().toISOString()
             };
             setMessages(prev => [...prev, assistantMessage]);
+          } else if (data.type === 'reasoning') {
+            const reasoningMessage: ChatMessage = {
+              id: `reasoning-${Date.now()}`,
+              role: 'assistant',
+              content: `
+              Initial reasoning: ${data.content.initial_reasoning}
+              Problems with initial reasoning: ${data.content.problems_with_initial_reasoning}
+              Improved reasoning: ${data.content.improved_reasoning}
+              `,
+              timestamp: new Date().toISOString()
+            };
+            setMessages(prev => [...prev, reasoningMessage]);
           } else if (data.type === 'graph_query') {
             const queryMessage: ChatMessage = {
               id: `query-${Date.now()}`,
