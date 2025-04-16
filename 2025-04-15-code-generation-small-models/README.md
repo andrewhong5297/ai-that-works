@@ -2,6 +2,35 @@
 
 > large models can do a lot, but so can small models. we'll discuss techniques for how to leverage extremely small models for generating diffs and making changes in complete codebases.
 
+## Diagrams
+
+### Overall Ownership - User vs. Agent
+
+![image](https://github.com/user-attachments/assets/658a465d-de6b-4f0e-8aa6-5a1f5aa85613)
+
+### Architecture
+
+![image](https://github.com/user-attachments/assets/ec88c07b-21fc-430d-a065-4654dfd280fa)
+
+### Context Window Management
+
+![image](https://github.com/user-attachments/assets/d0e37f92-9b6d-4de7-bf50-e2e960203927)
+
+
+### Pipelining Updates
+
+![image](https://github.com/user-attachments/assets/9898929e-cbf9-4418-aeb9-8d767b703acb)
+
+### Optimize - Serve most users with small, fast models 
+
+![image](https://github.com/user-attachments/assets/984a2a67-ae1f-4174-8a19-0616dd4e2151)
+
+### Start with big expensive models, improve coverage with smaller models over time
+
+![image](https://github.com/user-attachments/assets/8712b167-c937-4bfb-8629-60ac36f9f70b)
+
+
+
 ## Project Structure
 
 This session contains two main components:
