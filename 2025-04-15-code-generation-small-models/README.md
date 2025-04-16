@@ -23,7 +23,7 @@
 
 ### Optimize - Serve most users with small, fast models 
 
-![image](https://github.com/user-attachments/assets/9eaf2e2b-d96e-462e-bd76-e51f0b63e057)
+![image](https://github.com/user-attachments/assets/a4cd3df8-56f8-49b6-b1d8-12331f1d4825)
 
 ### Start with big expensive models, improve coverage with smaller models over time
 
