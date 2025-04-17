@@ -5,6 +5,15 @@ client<llm> CustomGPT4o {
   options {
     model "gpt-4o"
     api_key env.OPENAI_API_KEY
+    temperature 0.0
+  }
+}
+
+client<llm> Llama8b {
+  provider "openai-generic"
+  options {
+    model "llama-3.1:latest"
+    base_url "http://localhost:11434/v1"
   }
 }
 
@@ -14,6 +23,7 @@ client<llm> CustomGPT4oMini {
   options {
     model "gpt-4o-mini"
     api_key env.OPENAI_API_KEY
+    temperature 0.0
   }
 }
 
