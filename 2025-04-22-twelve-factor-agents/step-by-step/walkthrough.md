@@ -2,11 +2,18 @@
 
 Steps to start from an bare TS repo and build up a 12-factor agent.
 
-Won't cover setting up package.json or tsconfig.json here, but you can copy them from the
-final template.
+Won't cover setting up package.json or tsconfig.json here.
 
-You can walk through each step interactively with `npx tsx hack/run-walkthrough.ts -i -d` 
+You can run this walkthrough as an interactive script with `npx tsx hack/run-walkthrough.ts -i -d` 
 
+You can restore to (the end of) a specific chapter with `npx tsx hack/restore-walkthrough.ts NUMBER`, e.g. 
+to fast forward to the end of chapter 3, you can run
+
+```
+npx tsx hack/restore-walkthrough.ts 3
+```
+
+## Step-by-step walkthrough
 
 #### cleanup
 
