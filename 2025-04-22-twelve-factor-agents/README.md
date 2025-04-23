@@ -2,11 +2,11 @@
 
 > In this episode, we dove deep on the theory behind 12 factor agents, before getting hands on and building one from scratch
 
-[Video]() 
+[Video](https://youtu.be/yxJDyQ8v6P0) 
 
 For a full deep dive of the concepts and visuals, check out [12-factor-agents](https://hlyr.dev/12fa)
 
-[![12 factor agent](https://private-user-images.githubusercontent.com/3730605/430151074-23286ad8-7bef-4902-b371-88ff6a22e998.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDUzNTY0MDgsIm5iZiI6MTc0NTM1NjEwOCwicGF0aCI6Ii8zNzMwNjA1LzQzMDE1MTA3NC0yMzI4NmFkOC03YmVmLTQ5MDItYjM3MS04OGZmNmEyMmU5OTgucG5nP1gtQW16LUFsZ29yaXRobT1BV1M0LUhNQUMtU0hBMjU2JlgtQW16LUNyZWRlbnRpYWw9QUtJQVZDT0RZTFNBNTNQUUs0WkElMkYyMDI1MDQyMiUyRnVzLWVhc3QtMSUyRnMzJTJGYXdzNF9yZXF1ZXN0JlgtQW16LURhdGU9MjAyNTA0MjJUMjEwODI4WiZYLUFtei1FeHBpcmVzPTMwMCZYLUFtei1TaWduYXR1cmU9YzUxYmU4Y2IxYmU5MDAzNDgyMzgxOGUxMzQ3MTNhYWMxOWRkNWU4NWZmY2RiZjkwYzI4NTk1ZWNjZmY4MTBkMyZYLUFtei1TaWduZWRIZWFkZXJzPWhvc3QifQ.MLNLXSj3I3OXsCltsea_EpDvFKNMlC3Y36GHkJ2ECiE)](https://hlyr.dev/12fa)
+[![12 Factor Agents Video](https://img.youtube.com/vi/yxJDyQ8v6P0/0.jpg)](https://www.youtube.com/watch?v=yxJDyQ8v6P0)
 
 
 ## How to use this code
