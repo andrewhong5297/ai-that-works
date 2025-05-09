@@ -8,7 +8,7 @@ which is a tool for prompting and structured outputs.
 If you are using cursor or VSCode, you may also want to install the BAML extension for VSCode. However, if you use a different editor or don't want to install the extension, you will still be able to complete the workshop.
 
 
-    npm i baml
+    npm i @boundaryml/baml
 
 Initialize BAML
 
