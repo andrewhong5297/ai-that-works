@@ -1,0 +1,27 @@
+version = 1
+requires-python = ">=3.10"
+
+[[package]]
+name = "baml-py"
+version = "0.87.2"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/24/ec/8257f6da995976523fee242117ff4d5347f5b32ab3c6caea091d81c9f6d0/baml_py-0.87.2-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:8e0bff1c621367fe4c254b42acadc1d56d6510d362a68918ac67a5344c2f5b07", size = 15867628 },
+    { url = "https://files.pythonhosted.org/packages/87/a6/294849044d80e032f520daf3bd65a45d6dd965f6fa2c73649f0379310512/baml_py-0.87.2-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:75034631aff418bf27a3df479aee2ca3f42603268b93952fc471d0cd2ba70feb", size = 14753160 },
+    { url = "https://files.pythonhosted.org/packages/68/42/217e375f7004d8fc68406967193d8917d649b92b236710a39ee0e87386f9/baml_py-0.87.2-cp38-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:06899c0c6be1508060e289e146836a68b1a1009d582826fbc01b88adad1faa3e", size = 18254919 },
+    { url = "https://files.pythonhosted.org/packages/e8/0a/ebf2d13ae2b8218592707e1fa6d4260810a05f4ab763fc436a341a3d3e69/baml_py-0.87.2-cp38-abi3-manylinux_2_24_aarch64.whl", hash = "sha256:d05fd5506cebd9ba7e6a63d77ac3c94aa3cfe5095a7ecdc9e7d420a8382a7db7", size = 17592374 },
+    { url = "https://files.pythonhosted.org/packages/ce/5c/f90f99e88bd3ab3e591f464dbf924b37090b6a61df44e83134420b92fd9c/baml_py-0.87.2-cp38-abi3-musllinux_1_1_aarch64.whl", hash = "sha256:31450790a1cae7eb2744a8c51b23f8336480b94d753643de556abcda6be487e7", size = 17839716 },
+    { url = "https://files.pythonhosted.org/packages/af/91/a0a960a9d7b90d35af4809347ef504e0ae98dc2c9b1fbdf27589f6a66fbd/baml_py-0.87.2-cp38-abi3-musllinux_1_1_x86_64.whl", hash = "sha256:27059d0252bdd77e872213c93c95d5df2c4ea31f7f0a83f2ea29409f3f49911a", size = 18403666 },
+    { url = "https://files.pythonhosted.org/packages/25/05/f4a4393eb9c22a09de28a25794a28b0dc6fb8adf1aa97c09f062b64bbe8a/baml_py-0.87.2-cp38-abi3-win_amd64.whl", hash = "sha256:dc0c1b087b810d386dac5cc131c9fef5bacd1716c2da0f98602f2032a0c70765", size = 15942413 },
+]
+
+[[package]]
+name = "workshop-bonus"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "baml-py" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "baml-py", specifier = ">=0.87.2" }]
