@@ -4,7 +4,7 @@ This doc will serve as the source of truth for the event - check here for links,
 
 ### Basic Details
 
-When: Saturday, May 17, 2025
+When: Saturday, May 10, 2025
 
 Time: 10:30 AM \- 6:00 PM (Doors open at 9:00 AM, optional setup and tech check begins at 9:30AM)
 
