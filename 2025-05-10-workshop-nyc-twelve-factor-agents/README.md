@@ -18,7 +18,7 @@ Address: (hidden)
 > Workshop Content Starts at 10:30am sharp!
 
 - Network with other attendeees: https://nyc.aitinkerers.org/connect/mu__kniDIi7PZM
-- Discord Channel: (coming soon)
+- Discord Channel: https://discord.gg/CZAptKnB
 - Event Message board: https://nyc.aitinkerers.org/connect/mu__kniDIi7PZM/board
 
 Content:
