@@ -17,26 +17,6 @@ This session explores best practices for evaluating LLM applications, focusing o
 uv sync
 ```
 
-
-### Download the enron email dataset
-
-```bash
-wget 'https://www.cs.cmu.edu/~enron/enron_mail_20150507.tar.gz'
-```
-
-unzip the file
-
-```bash
-tar -xzvf enron_mail_20150507.tar.gz
-```
-
-### Download sarbanes-oxley dataset
-
-```bash
-wget 'https://www.govinfo.gov/content/pkg/PLAW-107publ204/html/PLAW-107publ204.htm'
-```
-
-
 ### run the code
 
 ```
