@@ -51,6 +51,7 @@ python hello.py
 4. using rubrics to design evals
 5. llm as judge
 6. Enron email dataset
+7. Visualizing Eval Results
 
 ## Session Notes
 
