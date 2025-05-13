@@ -29,9 +29,9 @@ lets code together 🧑‍💻
 | topic | description |
 | ----- | --------- |
 | 2025-06-03<br/>TBD<br/>youtube • code • [RSVP](https://lu.ma/0jcfpkqw) |  |
-| 2025-05-27<br/>TBD<br/>youtube • code • [RSVP](https://lu.ma/te6afvz2) |  |
-| 2025-05-20<br/>TBD<br/>youtube • code • [RSVP](https://lu.ma/iw1d9l3j) |  | 
-| 2025-05-13<br/>**designing evals**<br/>youtube • [code](./2025-05-13-designing-evals) • [RSVP](https://lu.ma/j5y6bd3i) | stay tuned for our season 2 kickoff topic on minimalist and high-performance testing/evals for LLM applications | 
+| 2025-05-27<br/>**12-factor agents: selecting from thousands of MCP tools**<br/>youtube • code • [RSVP](https://lu.ma/te6afvz2) |  |
+| 2025-05-20<br/>**Policy to Prompt: Evaluating w/ the Enron Emails Dataset**<br/>youtube • code • [RSVP](https://lu.ma/iw1d9l3j) | one of the most common problems in AI engineering is looking at a set of policies / rules and evaluating evidence to determine if the rules were followed. In this session we'll explore turning policies into prompts and pipelines to evaluate which emails in the massive [enron email dataset](https://www.cs.cmu.edu/~enron/) violated SEC and Sarbanes-Oxley regulations.  | 
+| 2025-05-13<br/>**evals evals evals**<br/>[youtube](https://youtu.be/-N6MajRfqYw) • [code](./2025-05-13-designing-evals) • [RSVP](https://lu.ma/j5y6bd3i) | stay tuned for our season 2 kickoff topic on minimalist and high-performance testing/evals for LLM applications | 
 | **Break**  |  We had a great time doing the first four episodes of AI that Works - we'll see y'all may 13th for season 2! |
 | 2025-04-22<br/>**twelve factor agents**<br/>[Youtube](https://youtu.be/yxJDyQ8v6P0) • [code](./2025-04-22-twelve-factor-agents) • PAST | learn how to build production-ready AI agents using the twelve-factor methodology. we'll cover the core concepts and build a real agent from scratch. | 
 | 2025-04-15<br/>**code generation with small models**<br/>[Youtube](https://youtu.be/KJkvYdGEnAY) • [code](./2025-04-15-code-generation-with-small-models) • PAST | large models can do a lot, but so can small models. we'll discuss techniques for how to leverge extremely small models for generating diffs and making changes in complete codebases. | 
