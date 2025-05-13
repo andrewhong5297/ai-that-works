@@ -1,19 +1,30 @@
 // Defining a data model.
-class Resume {
-  name string
-  email string
-  experience string[]
-  skills string[]
+class Question {
+  question string @description("A binary question that can be answered to determine whether the rule was followed")
 }
 
 // Create a function to extract the resume from a string.
-function ExtractResume(resume: string) -> Resume {
+function ExtractQuestions(document: string) -> Question[] {
   // Specify a client as provider/model-name
   // you can use custom LLM params with a custom client name from clients.baml like "client CustomHaiku"
   client "openai/gpt-4o" // Set OPENAI_API_KEY to use this client.
   prompt #"
-    Extract from this content:
-    {{ resume }}
+
+    You are a compliance expert. You read
+    policy documents and create questions
+    for an auditor to answer. The questions
+    should be binary questions that can be
+    answered to determine whether the rule
+    was followed.
+
+    The document will have many rules, output
+    questions for all of them.
+
+    {{ _.role("user") }}
+
+    Here is the document you are auditing:
+
+    {{ document }}
 
     {{ ctx.output_format }}
   "#

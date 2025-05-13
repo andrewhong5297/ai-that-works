@@ -2,7 +2,7 @@
 
 > minimalist and high-performance testing/evals for LLM applications
 
-Video • [RSVP](https://lu.ma/j5y6bd3i)
+[Video](https://www.youtube.com/watch?v=) • [RSVP](https://lu.ma/j5y6bd3i)
 
 ## Overview
 
@@ -30,6 +30,12 @@ unzip the file
 tar -xzvf enron_mail_20150507.tar.gz
 ```
 
+### Download sarbanes-oxley dataset
+
+```bash
+wget 'https://www.govinfo.gov/content/pkg/PLAW-107publ204/html/PLAW-107publ204.htm'
+```
+
 
 ### run the code
 
@@ -54,4 +60,23 @@ python hello.py
 
 ## Session Notes
 
-Coming soon after the session!
+Checklist
+
+- Vibe evals - run your prompt (e.g. in playground) and look at the output
+    - write in a few test cases that work
+    - write a few end to end tests that run your prompt chain (e.g. with pytest)
+    - great for tone
+- capture intermediate steps of your pipeline as probes and individual testable components
+    - alternative to probes 
+- structured outputs from an llm
+    - helps you break your problems down into smaller components
+    - e.g. lesson plan output --> "list of biases", "estimated cost"
+- don't use numbers for confidence, use a rubric
+    - categorical, "slow" vs "medium" vs "fast" - enum-based evals
+- use prod data to build up your golden dataset over time
+    - review diffs in either/both of RAW OUTPUT and the STRUCTURED EVALUATION of your pipeline outputs
+
+
+## Links
+
+- (using only) integrated tests are a scam https://www.youtube.com/watch?v=VDfX44fZoMc
