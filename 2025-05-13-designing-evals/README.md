@@ -82,3 +82,14 @@ Checklist
 
 - (using only) integrated tests are a scam [https://www.youtube.com/watch?v=VDfX44fZoMc](https://www.youtube.com/watch?v=VDfX44fZoMc)
 - [V0 - visualization for EVALS](https://v0.dev/chat/4uFXuYz2TEn)
+
+## whiteboards
+
+![image](https://github.com/user-attachments/assets/76c48baf-a4d5-4607-9a67-88ea27687d27)
+
+![image](https://github.com/user-attachments/assets/a3eb3a6f-da46-47b8-a721-de0d551e57c7)
+
+![image](https://github.com/user-attachments/assets/fb54a84e-a185-4325-aa02-00167db70317)
+
+![image](https://github.com/user-attachments/assets/135d9f07-f195-4d79-95d6-6abf501d11ac)
+
