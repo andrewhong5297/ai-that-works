@@ -2,7 +2,7 @@
 
 > minimalist and high-performance testing/evals for LLM applications
 
-[Video](https://www.youtube.com/watch?v=) • [RSVP](https://lu.ma/j5y6bd3i)
+[Video](https://youtu.be/-N6MajRfqYw) • [RSVP](https://lu.ma/j5y6bd3i)
 
 ## Overview
 
@@ -80,4 +80,5 @@ Checklist
 
 ## Links
 
-- (using only) integrated tests are a scam https://www.youtube.com/watch?v=VDfX44fZoMc
+- (using only) integrated tests are a scam [https://www.youtube.com/watch?v=VDfX44fZoMc](https://www.youtube.com/watch?v=VDfX44fZoMc)
+- [V0 - visualization for EVALS](https://v0.dev/chat/4uFXuYz2TEn)
