@@ -35,6 +35,12 @@ uv run hello.py
 uv add baml-py
 ```
 
+## initialize the baml project
+
+```
+uv run baml-cli init
+```
+
 ## run the baml example tests
 
 
@@ -42,19 +48,13 @@ uv add baml-py
 uv run baml-cli test
 ```
 
-## VSCode support for BAML
+## VSCode/Cursor extension
 
 you'll also want to install the BAML editor extension for [cursor](https://marketplace.cursorapi.com/items?itemName=Boundary.baml-extension) or [vscode](https://marketplace.visualstudio.com/items?itemName=Boundary.baml-extension).
 
 If you're not using vscode or cursor, you can still complete pretty much all of this workshop using the baml-cli commands.
 
 
+## check your work
 
-
-
-
-
-
-## you'll also want to install the VSCode extension for BAML
-
-
+expected source files at the env can be found in [./final](./final)
