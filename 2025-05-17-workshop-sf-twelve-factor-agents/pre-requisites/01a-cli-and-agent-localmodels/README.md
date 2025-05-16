@@ -8,10 +8,11 @@ First, copy the new agent.baml file:
 
     cp walkthrough/01a-agent.baml baml_src/agent.baml
 
+Regen baml client:
 
-then set the following environment variables:
+    npx baml-cli generate
 
-set
+then set the following environment variables (see below for ollama example)
 
     export LOCALMODEL_BASE_URL=
     export LOCALMODEL_MODEL_NAME=
@@ -28,6 +29,7 @@ start the ollama server:
 
 in another shell, 
 
+    ollama run llama3
 
 then, in a third shell, set your env vars 
 
@@ -35,6 +37,7 @@ then, in a third shell, set your env vars
     export LOCALMODEL_MODEL_NAME=llama3
 
 and run the CLI:
+
     npx tsx src/index.ts 'hello, world'
 
 ## lmstudio example
