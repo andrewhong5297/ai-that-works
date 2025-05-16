@@ -3,18 +3,18 @@ class DoneForNow {
   message string 
 }
 
-client<llm> LocalModel {
+client<llm> Qwen3 {
   provider "openai-generic"
   options {
-    base_url env.LOCALMODEL_BASE_URL
-    model env.LOCALMODEL_MODEL_NAME
+    base_url env.BASETEN_BASE_URL
+    api_key env.BASETEN_API_KEY 
   }
 }
 
 function DetermineNextStep(
     thread: string 
 ) -> DoneForNow {
-    client LocalModel
+    client Qwen3
 
     // use /nothink for now because the thinking tokens (or streaming thereof) screw with baml (i think (no pun intended))
     prompt #"
