@@ -3,7 +3,7 @@ class DoneForNow {
   message string 
 }
 
-client<llm> Qwen3 {
+client<llm> LocalModel {
   provider "openai-generic"
   options {
     base_url env.LOCALMODEL_BASE_URL
@@ -14,7 +14,7 @@ client<llm> Qwen3 {
 function DetermineNextStep(
     thread: string 
 ) -> CalculatorTools | DoneForNow {
-    client Qwen3
+    client LocalModel
 
     // use /nothink for now because the thinking tokens (or streaming thereof) screw with baml (i think (no pun intended))
     prompt #"
