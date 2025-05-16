@@ -5,14 +5,22 @@ This folder contains the pre-requisites for the SF workshop on 2025-05-17.
 
 You should complete at LEAST folders 00- and 01-, to ensure you have the basic LLM inference stack up
 
-We'll move very quickly through chapters 02- and 03- on saturday so we can get to the more interesting stuff,
-so if you have time / are newer to agent building, its recommended to walk through those as well!
 
 
+### the fast version
+
+complete the README.md in the following folders:
+
+- [00-hello-world](./00-hello-world) - basic nodejs and typescript setup steps
+- [00a-python-setup](./00a-python-setup) - ensure you have uv installed to work with python projects
+- [01-cli-and-agent](./01-cli-and-agent) - set up a basic CLI program that talks to LLMs
 
 ### the full version
 
-There are four folders here
+There are four folders here.
+
+We'll move very quickly through chapters 02- and 03- on saturday so we can get to the more interesting stuff,
+so if you have time / are newer to agent building, it's recommended to walk through those as well!
 
 - [00-hello-world](./00-hello-world) - basic nodejs and typescript setup steps
 - [01-cli-and-agent](./01-cli-and-agent) - set up a basic CLI program that talks to LLMs
@@ -21,13 +29,16 @@ There are four folders here
 
 Each is incremental, that is, 01-cli-and-agent starts off with the expected "end state" from 00
 
-### setting up pre-requisites
+### configuring local models
 
-- `cd 00-hello-world` and follow the readme steps
+In case of wifi issues, you may find it handy to run examples with local models via [lmstudio](https://lmstudio.ai/) or [ollama](https://ollama.com/).
 
-when you are done:
+If you have a running model + endpoint, you can test the examples 
 
-- `cd 01-cli-and-agent` and follow the readme steps
+    export LOCALMODEL_BASE_URL=
+    export LOCALMODEL_API_KEY= # optional
 
-etc until you have completed the setup steps.
 
+and completing the steps in 
+
+- [01a-cli-and-agent-localmodels](./01a-cli-and-agent-localmodels)
