@@ -188,10 +188,22 @@ export async function agentLoop(thread: Thread): Promise<AgentResponse> {
 
 </details>
 
-The the BAML code is configured to use BASETEN_API_KEY by default
+### Configuring inference keys
+
+The the BAML code is configured to use a baseten-hosted model by default
 
 To get a Baseten API key and URL, create an account at [baseten.co](https://baseten.co),
 and then deploy [Qwen3 32B from the model library](https://www.baseten.co/library/qwen-3-32b/).
+
+If you want to run the example with no changes, you can set the following
+
+    export BASETEN_API_KEY=...
+    export BASETEN_BASE_URL=...
+
+<details>
+    <summary>Testing with other models</summary>
+[Docs on baml clients can be found here](https://docs.boundaryml.com/guide/baml-basics/switching-llms) the 
+BaseTen qwen client is attached to the Prompt here:
 
 ```rust 
   function DetermineNextStep(thread: string) -> DoneForNow {
@@ -199,24 +211,15 @@ and then deploy [Qwen3 32B from the model library](https://www.baseten.co/librar
       // ...
 ```
 
-If you want to run the example with no changes, you can set the BASETEN_API_KEY env var to any valid baseten key.
-
-If you want to try swapping out the model, you can change the `client` line.
-
-[Docs on baml clients can be found here](https://docs.boundaryml.com/guide/baml-basics/switching-llms)
-
-For example, you can configure [gemini](https://docs.boundaryml.com/ref/llm-client-providers/google-ai-gemini) 
-or [anthropic](https://docs.boundaryml.com/ref/llm-client-providers/anthropic) as your model provider.
-
 For example, to use openai with an OPENAI_API_KEY, you can do:
 
     client "openai/gpt-4o"
 
+You can configure [gemini](https://docs.boundaryml.com/ref/llm-client-providers/google-ai-gemini) 
+or [anthropic](https://docs.boundaryml.com/ref/llm-client-providers/anthropic) as your model provider.
 
-Set your env vars
+</details>
 
-    export BASETEN_API_KEY=...
-    export BASETEN_BASE_URL=...
 
 Try it out
 
