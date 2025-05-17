@@ -6,11 +6,19 @@ class Resume {
   skills string[]
 }
 
+client<llm> LocalModel {
+  provider "openai-generic"
+  options {
+    base_url env.LOCALMODEL_BASE_URL
+    model env.LOCALMODEL_MODEL_NAME
+  }
+}
+
 // Create a function to extract the resume from a string.
 function ExtractResume(resume: string) -> Resume {
   // Specify a client as provider/model-name
   // you can use custom LLM params with a custom client name from clients.baml like "client CustomHaiku"
-  client "openai/gpt-4o" // Set OPENAI_API_KEY to use this client.
+  client LocalModel // Set OPENAI_API_KEY to use this client.
   prompt #"
     Extract from this content:
     {{ resume }}
@@ -18,8 +26,6 @@ function ExtractResume(resume: string) -> Resume {
     {{ ctx.output_format }}
   "#
 }
-
-
 
 // Test the function with a sample resume. Open the VSCode playground to run this.
 test vaibhav_resume {
