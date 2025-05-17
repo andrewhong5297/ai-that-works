@@ -24,7 +24,7 @@ Address: (hidden)
 -->
 
 - Network with other attendeees:  https://sf.aitinkerers.org/connect/mu_1zOYJgYv94c
-- Discord Channel: TODO
+- Discord Channel: https://discord.gg/hxJFnNwN
 - Event Message board: https://sf.aitinkerers.org/connect/mu_1zOYJgYv94c/board
 
 Content:
